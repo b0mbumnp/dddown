@@ -12,7 +12,7 @@ from telethon.tl.types import PeerChannel
 
 API_ID = int(os.environ["31034938"])
 API_HASH = os.environ["e9cf38cb39ee3f382a2747ee5c466cbc"]
-PASSWORD = os.environ["Go"]
+PASSWORD = os.environ["b0mbum"]
 SESSION = os.getenv("SESSION", "")
 
 client = TelegramClient(StringSession(SESSION), API_ID, API_HASH)
