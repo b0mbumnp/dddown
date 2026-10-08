@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telegram file downloader</title>
+<style>
+  :root { --bg:#eef5fa; --card:#fff; --ink:#10212e; --muted:#5a6b78; --line:#cfdce6; --accent:#1b8fc7; --bad:#c0392b; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0c1822; --card:#13232f; --ink:#e8f1f7; --muted:#8fa3b3; --line:#243846; --accent:#4cb4e8; --bad:#ff7a6b; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.5 system-ui,sans-serif; }
+  main { max-width:520px; margin:0 auto; padding:32px 20px; }
+  h1 { font-size:1.8rem; margin:0 0 6px; }
+  p { color:var(--muted); margin:0 0 20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  input { width:100%; padding:14px; margin-bottom:10px; font:inherit; color:inherit; background:transparent; border:1px solid var(--line); border-radius:10px; }
+  button { width:100%; padding:15px; font:inherit; font-weight:600; color:#fff; background:var(--accent); border:0; border-radius:10px; cursor:pointer; }
+  button:disabled { opacity:.6; }
+  #st { margin-top:14px; min-height:1.5em; color:var(--muted); word-break:break-word; }
+  #st.bad { color:var(--bad); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Telegram file downloader</h1>
+  <p>Paste a public Telegram post link and download the file.</p>
+  <div class="card">
+    <input id="pw" type="password" placeholder="Your password">
+    <input id="link" type="url" placeholder="https://t.me/channel/123" autocomplete="off">
+    <button id="go">Download</button>
+    <div id="st" role="status"></div>
+  </div>
+</main>
+<script>
+  var pw = document.getElementById("pw"), link = document.getElementById("link");
+  var go = document.getElementById("go"), st = document.getElementById("st");
+  try { pw.value = localStorage.getItem("pw") || ""; } catch (e) {}
+  function say(t, bad) { st.textContent = t; st.className = bad ? "bad" : ""; }
+  async function run() {
+    var url = link.value.trim();
+    if (!url) { say("Paste a Telegram link first.", true); return; }
+    try { localStorage.setItem("pw", pw.value); } catch (e) {}
+    go.disabled = true; say("Checking the link...");
+    try {
+      var q = "link=" + encodeURIComponent(url) + "&key=" + encodeURIComponent(pw.value);
+      var r = await fetch("/info?" + q);
+      var j = await r.json();
+      if (!r.ok) throw new Error(j.detail || "Link failed.");
+      say("Downloading " + j.name + " (" + (j.size / 1048576).toFixed(1) + " MB). Check your downloads.");
+      window.location.href = "/download?" + q;
+    } catch (e) { say(e.message, true); }
+    go.disabled = false;
+  }
+  go.addEventListener("click", run);
+  link.addEventListener("keydown", function (e) { if (e.key === "Enter") run(); });
+</script>
+</body>
+</html>
