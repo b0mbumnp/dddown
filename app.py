@@ -18,7 +18,7 @@ SESSION = os.getenv("SESSION", "")
 client = TelegramClient(StringSession(SESSION), API_ID, API_HASH)
 login = {"client": None, "phone": None, "hash": None}
 app = FastAPI()
-LINK = re.compile(r"(?:https?://)?t\.me/(c/)?([A-Za-z0-9_]+)/(\d+)")
+LINK = re.compile(r"(?:https?://)?t\.me/(c/)?([A-Za-z0-9_]+)/(?:\d+/)?(\d+)")
 
 
 def check(key):
