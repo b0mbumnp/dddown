@@ -10,9 +10,9 @@ from telethon.errors import SessionPasswordNeededError
 from telethon.sessions import StringSession
 from telethon.tl.types import PeerChannel
 
-API_ID = int(os.environ["31034938"])
-API_HASH = os.environ["e9cf38cb39ee3f382a2747ee5c466cbc"]
-PASSWORD = os.environ["b0mbum"]
+API_ID = int(os.environ["API_ID"])
+API_HASH = os.environ["API_HASH"]
+PASSWORD = os.environ["APP_PASSWORD"]
 SESSION = os.getenv("SESSION", "")
 
 client = TelegramClient(StringSession(SESSION), API_ID, API_HASH)
